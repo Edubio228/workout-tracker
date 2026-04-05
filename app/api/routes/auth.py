@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.auth import UserCreate, UserOut, Token
-from app.core.security import hash_password, verify_password, create_access_token
+from app.core.security import hash_password, verify_password, create_access_token, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -51,12 +51,20 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
     Returns a **Bearer token** — include it in the `Authorization` header
     of all subsequent requests:
-```
     Authorization: Bearer <your_token>
-```
     """
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = create_access_token({"sub": str(user.id)})
     return {"access_token": token, "token_type": "bearer"}
+
+@router.get(
+    "/me",
+    response_model=UserOut,
+    summary="Get current user",
+    response_description="The currently authenticated user",
+)
+def get_me(current_user: User = Depends(get_current_user)):
+    """Returns the profile of the currently logged in user."""
+    return current_user
