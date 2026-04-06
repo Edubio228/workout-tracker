@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
+from app.schemas.exercise import ExerciseOut
 
 class TemplateExerciseCreate(BaseModel):
     exercise_id:   int
@@ -10,9 +11,16 @@ class TemplateExerciseCreate(BaseModel):
     duration_secs: Optional[int]   = None
     notes:         Optional[str]   = None
 
-class TemplateExerciseOut(TemplateExerciseCreate):
-    id: int
-    model_config = {"from_attributes": True}
+class TemplateExerciseOut(BaseModel):
+    id:           int
+    exercise_id:  int
+    exercise:     Optional[ExerciseOut] = None
+    sets:         Optional[int]   = None
+    reps:         Optional[int]   = None
+    weight_kg:    Optional[float] = None
+    duration_secs:Optional[int]   = None
+    notes:        Optional[str]   = None
+    model_config  = {"from_attributes": True}
 
 class TemplateCreate(BaseModel):
     title:     str
