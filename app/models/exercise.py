@@ -11,5 +11,6 @@ class Exercise(Base):
     category     = Column(String)
     muscle_group = Column(String)
     user_id      = Column(Integer, ForeignKey("users.id"), nullable=True)
+    gif_url      = Column(String, nullable=True)
 
     owner = relationship("User", foreign_keys=[user_id])
