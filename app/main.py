@@ -21,6 +21,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Workout Tracker API",
     version="1.0.0",
+    lifespan=lifespan,
     description="""
 A REST API for tracking workouts, exercises, and personal records.
 

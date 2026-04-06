@@ -1,6 +1,8 @@
 import requests
 from app.db.session import SessionLocal
 from app.models.exercise import Exercise
+import app.models.user    # noqa — must import so SQLAlchemy sees User
+import app.models.workout # noqa — must import so SQLAlchemy sees Workout
 
 RAPIDAPI_KEY = "07b8b11baamshbcae68fbffc42f6p124104jsnbbcd6039a14d"
 
@@ -46,10 +48,15 @@ def populate_gifs():
                 gif_url = fetch_gif_url(search_name)
                 if gif_url:
                     exercise.gif_url = gif_url
-                    print(f"Added GIF for {our_name}")
+                    print(f"✓ Added GIF for {our_name}")
                 else:
-                    print(f"No GIF found for {our_name}")
+                    print(f"✗ No GIF found for {our_name}")
+            elif exercise and exercise.gif_url:
+                print(f"- Already has GIF: {our_name}")
+            else:
+                print(f"? Exercise not found in DB: {our_name}")
         db.commit()
+        print("Done.")
     finally:
         db.close()
 
