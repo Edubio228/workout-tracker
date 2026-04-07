@@ -11,10 +11,9 @@ import app.models.user      # noqa
 import app.models.workout   # noqa
 import app.models.exercise  # noqa
 
-Base.metadata.create_all(bind=engine)
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
     seed_exercises()
     yield
 
@@ -24,7 +23,6 @@ app = FastAPI(
     lifespan=lifespan,
     description="""
 A REST API for tracking workouts, exercises, and personal records.
-
 ## Features
 - **Authentication** — register and log in with JWT tokens
 - **Workouts** — create, schedule, update, and delete workouts
@@ -34,7 +32,6 @@ A REST API for tracking workouts, exercises, and personal records.
 - **Progress** — strength curves, volume trends, and workout frequency
 - **Body Measurements** — track weight, body fat, and measurements over time
 - **Reports** — summary stats over a given time period
-
 ## Authentication
 All endpoints except `/auth/register` and `/auth/login` require a Bearer token.
 After logging in, click the **Authorize** button and paste your token.
